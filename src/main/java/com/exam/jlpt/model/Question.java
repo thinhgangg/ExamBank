@@ -1,7 +1,7 @@
 package com.exam.jlpt.model;
 
 import java.util.List;
-import java.util.ArrayList; // Import ArrayList
+import java.util.ArrayList;
 
 public class Question {
     private int id;
@@ -10,19 +10,12 @@ public class Question {
     private String imgPath;
     private String jlptLevel;
     private String questionType;
-    private String correctAnswer; // This field is populated by DAO for convenience (e.g., table display)
+    private String correctAnswer;
     private int points;
 
-    // --- THIS IS THE PRIMARY FIELD TO HOLD ANSWER OBJECTS ---
     private List<Answer> answers;
-    // --- End primary field ---
-
-    // Remove: private String content;
-    // Remove: private List<String> options;
-
 
     public Question() {
-        // --- Initialize the list in default constructor ---
         this.answers = new ArrayList<>();
     }
 
@@ -36,11 +29,9 @@ public class Question {
         this.correctAnswer = correctAnswer;
         this.imgPath = imgPath;
 
-        // --- Initialize the list in this constructor ---
         this.answers = new ArrayList<>();
     }
 
-    // Add constructor without ID for adding new questions
     public Question(String questionText, String audioPath, String jlptLevel, String questionType, int points, String imgPath) {
         this.questionText = questionText;
         this.audioPath = audioPath;
@@ -49,7 +40,6 @@ public class Question {
         this.points = points;
         this.imgPath = imgPath;
 
-        // --- Initialize the list in this constructor ---
         this.answers = new ArrayList<>();
     }
 
@@ -61,7 +51,7 @@ public class Question {
     public String getImgPath() { return imgPath; }
     public String getJlptLevel() { return jlptLevel; }
     public String getQuestionType() { return questionType; }
-    public String getCorrectAnswer() { return correctAnswer; } // Used for convenience (e.g., table)
+    public String getCorrectAnswer() { return correctAnswer; }
     public int getPoints() { return points; }
 
     // Setters
@@ -74,31 +64,21 @@ public class Question {
     public void setPoints(int points) { this.points = points; }
 
 
-    // --- Getter and setter for the List<Answer> ---
     public List<Answer> getAnswers() {
         return answers;
     }
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
-        // Optional: Update correctAnswer string when the list of Answer objects is set
         if (answers != null) {
             String correctAnsText = answers.stream()
                     .filter(Answer::isCorrect)
                     .findFirst()
                     .map(Answer::getAnswerText)
                     .orElse(null);
-            this.correctAnswer = correctAnsText; // Set the field directly
+            this.correctAnswer = correctAnsText;
         } else {
-            this.correctAnswer = null; // Clear correct answer if answers list is null
+            this.correctAnswer = null;
         }
     }
-    // --- End getter and setter ---
-
-    // Remove: public String getContent() { return content; }
-    // Remove: public void setContent() { this.content = content; } // This setter doesn't use a parameter?
-    // Remove: public List<String> getOptions() { return options; }
-    // Remove: public void setOptions(List<String> options) { this.options = options; }
-
-    // Other methods like toString() if needed
 }

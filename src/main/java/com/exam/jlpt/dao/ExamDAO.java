@@ -1,21 +1,18 @@
 package com.exam.jlpt.dao;
 
 import com.exam.jlpt.DatabaseConnector;
-import com.exam.jlpt.model.Answer;
-import com.exam.jlpt.model.Exam; // Import lớp Exam
-import com.exam.jlpt.model.Question;
+import com.exam.jlpt.model.Exam;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Date; // Import Date
-import java.util.stream.Collectors;
+import java.util.Date;
 
 public class ExamDAO {
 
     // Phương thức để lấy thông tin đề thi theo ID
     public Exam getExamById(int id) throws SQLException {
         String sql = "SELECT id, name, exam_type, jlpt_level, total_questions, created_at FROM exams WHERE id = ?";
-        try (Connection conn = DatabaseConnector.getConnection(); // Assuming DatabaseConnector exists
+        try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -26,18 +23,17 @@ public class ExamDAO {
                     exam.setExamType(rs.getString("exam_type"));
                     exam.setJlptLevel(rs.getString("jlpt_level"));
                     exam.setTotalQuestions(rs.getInt("total_questions"));
-                    // Chuyển Timestamp từ DB thành java.util.Date
                     Timestamp timestamp = rs.getTimestamp("created_at");
                     if (timestamp != null) {
                         exam.setCreatedAt(new Date(timestamp.getTime()));
                     } else {
-                        exam.setCreatedAt(null); // Hoặc new Date() tùy logic
+                        exam.setCreatedAt(null);
                     }
                     return exam;
                 }
             }
         }
-        return null; // Trả về null nếu không tìm thấy
+        return null;
     }
 
     // Phương thức để lấy tất cả đề thi
@@ -162,7 +158,7 @@ public class ExamDAO {
             ps.setString(2, exam.getExamType());
             ps.setString(3, exam.getJlptLevel());
             ps.setInt(4, exam.getTotalQuestions());
-            ps.setTimestamp(5, new Timestamp(exam.getCreatedAt().getTime())); // Convert Date to Timestamp
+            ps.setTimestamp(5, new Timestamp(exam.getCreatedAt().getTime()));
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -171,7 +167,7 @@ public class ExamDAO {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    return rs.getInt(1); // Return generated ID
+                    return rs.getInt(1);
                 } else {
                     throw new SQLException("Creating exam failed, no ID obtained.");
                 }
@@ -181,9 +177,6 @@ public class ExamDAO {
 
     // Phương thức để xóa đề thi
     public boolean deleteExam(int id) throws SQLException {
-        // Logic xóa câu hỏi liên quan trong bảng exam_questions
-        // Nếu có ràng buộc khóa ngoại với CASCADE DELETE, việc xóa exam sẽ tự động xóa exam_questions.
-        // Nếu không, bạn cần xóa thủ công trước: DELETE FROM exam_questions WHERE exam_id = id;
         String sql = "DELETE FROM exams WHERE id = ?";
         try (Connection conn = DatabaseConnector.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -191,7 +184,5 @@ public class ExamDAO {
             return ps.executeUpdate() > 0;
         }
     }
-
-    // Bạn cần thêm các phương thức khác nếu cần (ví dụ: updateExam)
 
 }

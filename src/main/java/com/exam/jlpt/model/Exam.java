@@ -1,13 +1,13 @@
 package com.exam.jlpt.model;
 
-import java.util.Date; // hoặc java.time.LocalDateTime nếu dùng Java 8+
+import java.util.Date;
 
 public class Exam {
     private int id;
     private String name;
-    private Date createdAt; // Hoặc LocalDateTime
+    private Date createdAt;
     private String jlptLevel;
-    private Integer totalQuestions; // Integer để có thể là null nếu không lưu trữ
+    private Integer totalQuestions;
     private String examType;
 
     // Constructors
